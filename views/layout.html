@@ -35,6 +35,9 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfQxgWt-LSZcEmTEN8581Uq9SzZHnpuys"></script>
     <script src="/js/map.js"></script>
     <script>
+
+    //var startDay = $("#start-day").clone();
+
      $('#hotels').on('click', 'button', function() {
       var selectedOption = $("#hotel-choices option:selected").text();
       var hotelIndex;
@@ -44,9 +47,13 @@
         }
       })
       var hotelLocation = hotels[hotelIndex].place.location;
-      var newHtml = '<div class="itinerary-item"><span class="title">' + selectedOption + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>'
+      var newHtml = '<div id=' + hotelIndex + ' class="itinerary-item"><span class="title">' + selectedOption + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>'
       $("#hotel-itinerary").append(newHtml);
-      drawMarker('hotel', hotelLocation);
+      // $("#hotel-itinerary .itinerary-item").data(hotels[hotelIndex].name, {"type": "hotel", "index": hotelIndex});
+      var markerTest = drawMarker('hotel', hotelLocation);
+      $("#hotel-itinerary #" + hotelIndex).data(selectedOption, markerTest);
+      // {Andaz Wall Street: markerTest}
+      // console.log(markerTest);
     })
      $('#restaurants').on('click', 'button', function() {
       var selectedOption = $("#restaurant-choices option:selected").text();
@@ -57,9 +64,10 @@
         }
       })
       var restaurantLocation = restaurants[restaurantIndex].place.location;
-      var newHtml = '<div class="itinerary-item"><span class="title">' + selectedOption + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>'
+      var newHtml = '<div id=' + restaurantIndex + ' class="itinerary-item"><span class="title">' + selectedOption + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>'
       $("#restaurant-itinerary").append(newHtml);
-      drawMarker('restaurant', restaurantLocation);
+      var markerTest = drawMarker('restaurant', restaurantLocation);
+      $("#restaurant-itinerary #" + restaurantIndex).data(selectedOption, markerTest);
     })
      $('#activities').on('click', 'button', function() {
       var selectedOption = $("#activity-choices option:selected").text();
@@ -70,19 +78,35 @@
         }
       })
       var activityLocation = activities[activityIndex].place.location;
-      var newHtml = '<div class="itinerary-item"><span class="title">' + selectedOption + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>'
+      var newHtml = '<div id=' + activityIndex + ' class="itinerary-item"><span class="title">' + selectedOption + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>'
       $("#activity-itinerary").append(newHtml);
-      drawMarker('activity', activityLocation);
-
+      var markerTest = drawMarker('activity', activityLocation);
+      $("#activity-itinerary #" + activityIndex).data(selectedOption, markerTest);
     })
 
     //delete
     $('#itinerary').on('click', 'button', function() {
+      var name = $(this).siblings()[0].textContent;
+      var index = $(this).parent().attr('id');
+      var parent = $(this).parent().parent().attr('id');
+      var marker = $("#" + parent + " #" + index).data(name);
+      marker.setMap(null);
       $(this).parent().remove();
-      $(this).siblings().textContent;
     })
 
+    //add a day button thing
+    $("#add-day").on('click', function() {
+      $(".day-buttons button").removeClass("current-day");
+      var numOfDays = $(".day-buttons button").length;
 
+      $(this).before("<button class='btn btn-circle day-btn current-day'>" + numOfDays + "</button>");
+      $("#day-title span").text("Day " + numOfDays);
+
+
+      //$("#start-day").append(startDay);
+      //$("#start-day .panel")[0].hide();
+
+    })
 
 
 
