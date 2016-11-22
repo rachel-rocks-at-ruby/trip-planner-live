@@ -34,6 +34,63 @@
     <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDfQxgWt-LSZcEmTEN8581Uq9SzZHnpuys"></script>
     <script src="/js/map.js"></script>
+    <script>
+     $('#hotels').on('click', 'button', function() {
+      var selectedOption = $("#hotel-choices option:selected").text();
+      var hotelIndex;
+      hotels.forEach(function(hotel, index) {
+        if (hotel.name === selectedOption) {
+          hotelIndex = index;
+        }
+      })
+      var hotelLocation = hotels[hotelIndex].place.location;
+      var newHtml = '<div class="itinerary-item"><span class="title">' + selectedOption + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>'
+      $("#hotel-itinerary").append(newHtml);
+      drawMarker('hotel', hotelLocation);
+    })
+     $('#restaurants').on('click', 'button', function() {
+      var selectedOption = $("#restaurant-choices option:selected").text();
+      var restaurantIndex;
+      restaurants.forEach(function(restaurant, index) {
+        if (restaurant.name === selectedOption) {
+          restaurantIndex = index;
+        }
+      })
+      var restaurantLocation = restaurants[restaurantIndex].place.location;
+      var newHtml = '<div class="itinerary-item"><span class="title">' + selectedOption + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>'
+      $("#restaurant-itinerary").append(newHtml);
+      drawMarker('restaurant', restaurantLocation);
+    })
+     $('#activities').on('click', 'button', function() {
+      var selectedOption = $("#activity-choices option:selected").text();
+      var activityIndex;
+      activities.forEach(function(activity, index) {
+        if (activity.name === selectedOption) {
+          activityIndex = index;
+        }
+      })
+      var activityLocation = activities[activityIndex].place.location;
+      var newHtml = '<div class="itinerary-item"><span class="title">' + selectedOption + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>'
+      $("#activity-itinerary").append(newHtml);
+      drawMarker('activity', activityLocation);
 
+    })
+
+    //delete
+    $('#itinerary').on('click', 'button', function() {
+      $(this).parent().remove();
+      $(this).siblings().textContent;
+    })
+
+
+
+
+
+    </script>
   </body>
 </html>
+
+
+<!---->
+
+
