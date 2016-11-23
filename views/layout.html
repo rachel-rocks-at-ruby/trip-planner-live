@@ -50,7 +50,7 @@
       var markerTest = drawMarker('hotel', hotelLocation);
       $("#hotel-itinerary #" + hotelIndex).data(selectedOption, markerTest);
       var currentDay = "day" + $('.current-day').text();
-      days[currentDay].hotel.push({name: selectedOption, index: hotelIndex, location: markerTest, html: newHtml});
+      days[currentDay].hotel.push({name: selectedOption, index: hotelIndex, location: hotelLocation, html: newHtml});
     })
      $('#restaurants').on('click', 'button', function() {
       var selectedOption = $("#restaurant-choices option:selected").text();
@@ -66,7 +66,7 @@
       var markerTest = drawMarker('restaurant', restaurantLocation);
       $("#restaurant-itinerary #" + restaurantIndex).data(selectedOption, markerTest);
       var currentDay = "day" + $('.current-day').text();
-      days[currentDay].restaurant.push({name: selectedOption, index: restaurantIndex, location: markerTest, html: newHtml});
+      days[currentDay].restaurant.push({name: selectedOption, index: restaurantIndex, location: restaurantLocation, html: newHtml});
     })
      $('#activities').on('click', 'button', function() {
       var selectedOption = $("#activity-choices option:selected").text();
@@ -82,7 +82,7 @@
       var markerTest = drawMarker('activity', activityLocation);
       $("#activity-itinerary #" + activityIndex).data(selectedOption, markerTest);
       var currentDay = "day" + $('.current-day').text();
-      days[currentDay].activity.push({name: selectedOption, index: activityIndex, location: markerTest, html: newHtml});
+      days[currentDay].activity.push({name: selectedOption, index: activityIndex, location: activityLocation, html: newHtml});
     })
 
     //delete
@@ -108,6 +108,7 @@
 
     //add a day button thing
     $("#add-day").on('click', function() {
+      clearMarkers();
       $(".day-buttons button").removeClass("current-day");
       var numOfDays = $(".day-buttons button").length;
 
@@ -128,14 +129,23 @@
         $(this).addClass('current-day');
         var day = $(this).text();
         $("#day-title span").text("Day " + day);
+
+        clearMarkers();
+
         $('.itinerary-item').remove();
         for (var key in days["day" + day]) {
           days["day" + day][key].forEach(function(elem){
             $("#" + key + "-itinerary")
             .append(elem.html);
+            drawMarker(key, elem.location);
           })
         }
       }
+    })
+
+    // deleting days
+    $("#day-remove").on('click', function() {
+
     })
 
     </script>

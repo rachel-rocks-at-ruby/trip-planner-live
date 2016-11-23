@@ -1,5 +1,6 @@
 var iconURLs;
 var currentMap;
+var markers = [];
 
 function drawMarker (type, coords) {
     var latLng = new google.maps.LatLng(coords[0], coords[1]);
@@ -8,9 +9,16 @@ function drawMarker (type, coords) {
       icon: iconURL,
       position: latLng
     });
+    markers.push(marker);
     marker.setMap(currentMap);
     return marker;
   }
+
+function clearMarkers() {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(null);
+  }
+}
 
 $(function initializeMap (){
 
