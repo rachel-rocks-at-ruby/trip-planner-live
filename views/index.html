@@ -79,6 +79,13 @@
   </div>
 </div>
 <script>
+  var days = {
+      day1: {
+      hotel: [],
+      restaurant: [],
+      activity: []
+    }
+  };
   var hotels = {{ hotels | dump | safe }};
   var restaurants = {{ restaurants | dump | safe }};
   var activities = {{ activities | dump | safe }};

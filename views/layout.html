@@ -36,8 +36,6 @@
     <script src="/js/map.js"></script>
     <script>
 
-    //var startDay = $("#start-day").clone();
-
      $('#hotels').on('click', 'button', function() {
       var selectedOption = $("#hotel-choices option:selected").text();
       var hotelIndex;
@@ -49,11 +47,10 @@
       var hotelLocation = hotels[hotelIndex].place.location;
       var newHtml = '<div id=' + hotelIndex + ' class="itinerary-item"><span class="title">' + selectedOption + '</span><button class="btn btn-xs btn-danger remove btn-circle">x</button></div>'
       $("#hotel-itinerary").append(newHtml);
-      // $("#hotel-itinerary .itinerary-item").data(hotels[hotelIndex].name, {"type": "hotel", "index": hotelIndex});
       var markerTest = drawMarker('hotel', hotelLocation);
       $("#hotel-itinerary #" + hotelIndex).data(selectedOption, markerTest);
-      // {Andaz Wall Street: markerTest}
-      // console.log(markerTest);
+      var currentDay = "day" + $('.current-day').text();
+      days[currentDay].hotel.push({name: selectedOption, index: hotelIndex, location: markerTest, html: newHtml});
     })
      $('#restaurants').on('click', 'button', function() {
       var selectedOption = $("#restaurant-choices option:selected").text();
@@ -68,6 +65,8 @@
       $("#restaurant-itinerary").append(newHtml);
       var markerTest = drawMarker('restaurant', restaurantLocation);
       $("#restaurant-itinerary #" + restaurantIndex).data(selectedOption, markerTest);
+      var currentDay = "day" + $('.current-day').text();
+      days[currentDay].restaurant.push({name: selectedOption, index: restaurantIndex, location: markerTest, html: newHtml});
     })
      $('#activities').on('click', 'button', function() {
       var selectedOption = $("#activity-choices option:selected").text();
@@ -82,6 +81,8 @@
       $("#activity-itinerary").append(newHtml);
       var markerTest = drawMarker('activity', activityLocation);
       $("#activity-itinerary #" + activityIndex).data(selectedOption, markerTest);
+      var currentDay = "day" + $('.current-day').text();
+      days[currentDay].activity.push({name: selectedOption, index: activityIndex, location: markerTest, html: newHtml});
     })
 
     //delete
@@ -90,8 +91,19 @@
       var index = $(this).parent().attr('id');
       var parent = $(this).parent().parent().attr('id');
       var marker = $("#" + parent + " #" + index).data(name);
+      var currentDay = $('.current-day').text();
       marker.setMap(null);
       $(this).parent().remove();
+      var type = parent.slice(0, -10);
+      var objectIndex;
+
+      days["day" + currentDay][type].forEach(function(entry, index) {
+        if (entry.name === name) {
+           objectIndex = index;
+        }
+      })
+
+      days["day" + currentDay][type].splice(objectIndex, 1);
     })
 
     //add a day button thing
@@ -101,20 +113,33 @@
 
       $(this).before("<button class='btn btn-circle day-btn current-day'>" + numOfDays + "</button>");
       $("#day-title span").text("Day " + numOfDays);
-
-
-      //$("#start-day").append(startDay);
-      //$("#start-day .panel")[0].hide();
-
+      days["day" + numOfDays] = {
+        hotel: [],
+        restaurant: [],
+        activity: []
+      };
+      $('.itinerary-item').remove();
     })
 
-
+    // switching days
+    $(".day-buttons").on('click', 'button', function() {
+      if ($(this).attr('id') !== "add-day") {
+        $(".day-buttons button").removeClass("current-day");
+        $(this).addClass('current-day');
+        var day = $(this).text();
+        $("#day-title span").text("Day " + day);
+        $('.itinerary-item').remove();
+        for (var key in days["day" + day]) {
+          days["day" + day][key].forEach(function(elem){
+            $("#" + key + "-itinerary")
+            .append(elem.html);
+          })
+        }
+      }
+    })
 
     </script>
   </body>
 </html>
-
-
-<!---->
 
 
